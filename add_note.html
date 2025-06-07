@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+    <title>Add Note</title>
+</head>
+<body>
+    <h1>Add a New Note</h1>
+    <form method="post">
+        <<textarea name="note" rows="15" cols="80" required></textarea>
+
+        <button type="submit">Save</button>
+    </form>
+    <br>
+    <a href="{{ url_for('index') }}">Back to Notes</a>
+</body>
+</html>
+

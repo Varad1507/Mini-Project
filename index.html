@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+    <title>My Notes</title>
+</head>
+<body>
+    <h1>Notes</h1>
+    <a href="{{ url_for('add_note') }}">Add Note</a>
+    <ul>
+        {% for note in notes %}
+            <li>{{ note }} <a href="{{ url_for('delete_note', index=loop.index0) }}">Delete</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
