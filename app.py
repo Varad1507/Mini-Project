@@ -1,25 +1,22 @@
-from flask import Flask, render_template, request, redirect, url_for
+import streamlit as st
+import joblib
+import re
 
-app = Flask(__name__)
-notes = []  # simple in-memory storage
+model = joblib.load('sentiment_model.pkl')
+vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
-@app.route('/')
-def index():
-    return render_template('index.html', notes=notes)
+def clean(text):
+    text = re.sub(r"http\S+|www\S+|https\S+", '', text)
+    text = re.sub(r'\@\w+|\#','', text)
+    text = re.sub(r'[^A-Za-z\s]', '', text.lower())
+    return text
 
-@app.route('/add', methods=['GET', 'POST'])
-def add_note():
-    if request.method == 'POST':
-        note = request.form['note']
-        notes.append(note)
-        return redirect(url_for('index'))
-    return render_template('add_note.html')
+st.title("Twitter Sentiment Analyzer")
 
-@app.route('/delete/<int:index>')
-def delete_note(index):
-    if 0 <= index < len(notes):
-        notes.pop(index)
-    return redirect(url_for('index'))
-
-if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+user_input = st.text_area("Enter a tweet:")
+if st.button("Analyze"):
+    clean_input = clean(user_input)
+    vect_input = vectorizer.transform([clean_input])
+    prediction = model.predict(vect_input)
+    st.write(f"**Sentiment:** {prediction[0]}")
+ 
